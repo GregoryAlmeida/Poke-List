@@ -45,12 +45,13 @@ function App() {
           height: '100vh',
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           justifyContent: 'space-around',
         }}
       >
         <h1
           style={{
-            width: '50rem',
+            width: '35vw',
             margin: 'auto',
             fontSize: '3rem',
             textAlign: 'center',
@@ -60,9 +61,9 @@ function App() {
         </h1>
         <input
           style={{
-            width: '50rem',
+            width: '35vw',
             margin: 'auto',
-            fontSize: '3rem',
+            fontSize: '2rem',
             textAlign: 'center',
           }}
           type="text"
@@ -70,10 +71,16 @@ function App() {
           placeholder="Digite aqui...."
         />
         <button
-          style={{ width: '10rem', margin: 'auto', fontSize: '3rem' }}
+          style={{ margin: 'auto', fontSize: '2rem', marginTop: '1rem' }}
           onClick={handleClick}
         >
           Enviar
+        </button>
+        <button
+          style={{ margin: 'auto', fontSize: '2rem', marginTop: '1rem' }}
+          onClick={() => setPoke(Math.floor(Math.random() * 1025))}
+        >
+          Poké Aleatório
         </button>
 
         {loading ? (
@@ -90,12 +97,12 @@ function App() {
         ) : (
           <>
             <img
-              style={{ width: '50rem', height: '100rem', margin: 'auto' }}
+              style={{ width: '40vw', height: '60vh', margin: 'auto' }}
               src={img.front_default}
               alt=""
             />
             <img
-              style={{ width: '50rem', height: '100rem', margin: 'auto' }}
+              style={{ width: '50vw', height: '60vh', margin: 'auto' }}
               src={img.front_shiny}
               alt=""
             />
