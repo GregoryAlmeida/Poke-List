@@ -10,6 +10,9 @@ function App() {
 
   const getPoke = async () => {
     try {
+      await axios
+        .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+        .then((response) => setPokeName(response.data.forms[0].name));
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke}`).then(
         (response) =>
           axios(response.data.forms[0].url).then((response) =>
