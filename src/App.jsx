@@ -7,12 +7,18 @@ function App() {
   const [pokeIn, setPokeIn] = useState('');
   const [img, setImg] = useState([]);
   const [loading, setLoading] = useState('Carregando...');
+  const [shiny, setShiny] = useState(false);
+  const [id, setId] = useState('25');
 
   const getPoke = async () => {
     try {
       await axios
         .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
         .then((response) => setPokeName(response.data.forms[0].name));
+      await axios
+        .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+        .then((response) => setId(response.data.id));
+
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke}`).then(
         (response) =>
           axios(response.data.forms[0].url).then((response) =>
@@ -113,17 +119,66 @@ function App() {
             <>
               <h1 style={{ textAlign: 'center', textTransform: 'uppercase' }}>
                 {pokeName}
+                <br />({id})
               </h1>
-              <img
-                style={{ width: '40rem', height: '60vh', margin: 'auto' }}
-                src={img.front_default}
-                alt=""
-              />
-              <img
-                style={{ width: '40rem', height: '60vh', margin: 'auto' }}
-                src={img.front_shiny}
-                alt=""
-              />
+              <section style={{ display: 'flex' }}>
+                <div>
+                  <img
+                    style={{ width: '40rem', height: '60vh', margin: 'auto' }}
+                    src={shiny ? img.front_shiny : img.front_default}
+                    alt=""
+                  />
+                  <h1 style={{ fontSize: '3rem', textAlign: 'center' }}>
+                    Shiny
+                    <input
+                      style={{
+                        borderRadius: '5px',
+                        width: '4rem',
+                        height: '2rem',
+                      }}
+                      type="checkbox"
+                      checked={shiny}
+                      onChange={() => setShiny(!shiny)}
+                    />
+                  </h1>
+                </div>
+                <div>
+                  <h1>Titulo</h1>
+                  <h2>Subtitulo</h2>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Non
+                    corporis est eaque architecto inventore esse maxime ipsa
+                    quidem, eum blanditiis molestiae provident neque, dolore
+                    maiores ab fuga corrupti recusandae vero!
+                  </p>
+                  <br />
+                  <h1>Titulo</h1>
+                  <h2>Subtitulo</h2>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Iusto iure sint veniam ea consectetur rerum, nulla
+                    repellendus inventore, nemo sequi libero! Nemo dolorum,
+                    inventore explicabo ducimus cumque deserunt pariatur qui.
+                  </p>
+                  <h1>Titulo</h1>
+                  <h2>Subtitulo</h2>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Non
+                    corporis est eaque architecto inventore esse maxime ipsa
+                    quidem, eum blanditiis molestiae provident neque, dolore
+                    maiores ab fuga corrupti recusandae vero!
+                  </p>
+                  <br />
+                  <h1>Titulo</h1>
+                  <h2>Subtitulo</h2>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Iusto iure sint veniam ea consectetur rerum, nulla
+                    repellendus inventore, nemo sequi libero! Nemo dolorum,
+                    inventore explicabo ducimus cumque deserunt pariatur qui.
+                  </p>
+                </div>
+              </section>
             </>
           )}
         </div>
