@@ -3,30 +3,18 @@ import React, { useEffect, useState } from 'react';
 
 function App() {
   const [poke, setPoke] = useState('pikachu');
-  const [pokeName, setPokeName] = useState(poke);
+  const [pokeInfo, setPokeInfo] = useState(poke);
   const [pokeIn, setPokeIn] = useState('');
-  const [img, setImg] = useState([]);
   const [loading, setLoading] = useState('Carregando...');
   const [shiny, setShiny] = useState(false);
-  const [id, setId] = useState('25');
 
   const getPoke = async () => {
     try {
       await axios
         .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
-        .then((response) => setPokeName(response.data.forms[0].name));
-      await axios
-        .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
-        .then((response) => setId(response.data.id));
+        .then((response) => setPokeInfo(response.data));
 
-      await axios.get(`https://pokeapi.co/api/v2/pokemon/${poke}`).then(
-        (response) =>
-          axios(response.data.forms[0].url).then((response) =>
-            setImg(response.data.sprites),
-          ),
-
-        setLoading(false),
-      );
+      setLoading(false);
     } catch {
       setLoading('Desculpe pokémon não encontrado 😞');
     }
@@ -118,28 +106,41 @@ function App() {
           ) : (
             <>
               <h1 style={{ textAlign: 'center', textTransform: 'uppercase' }}>
-                {pokeName}
-                <br />({id})
+                {pokeInfo.forms[0].name}
+                <br />({pokeInfo.id})
               </h1>
               <section style={{ display: 'flex' }}>
                 <div>
                   <img
                     style={{ width: '40rem', height: '60vh', margin: 'auto' }}
-                    src={shiny ? img.front_shiny : img.front_default}
+                    src={
+                      shiny
+                        ? pokeInfo.sprites.other.showdown.front_shiny
+                        : pokeInfo.sprites.other.showdown.front_default
+                    }
                     alt=""
                   />
-                  <h1 style={{ fontSize: '3rem', textAlign: 'center' }}>
+                  <h1 style={{ fontSize: '2rem', textAlign: 'center' }}>
                     Shiny
                     <input
                       style={{
                         borderRadius: '5px',
                         width: '4rem',
-                        height: '2rem',
+                        height: '1rem',
                       }}
                       type="checkbox"
                       checked={shiny}
                       onChange={() => setShiny(!shiny)}
                     />
+                  </h1>
+                  <h1
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-evenly',
+                    }}
+                  >
+                    PokéSom <audio src={pokeInfo.cries.latest} controls />
                   </h1>
                 </div>
                 <div>
