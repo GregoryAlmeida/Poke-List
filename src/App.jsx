@@ -8,7 +8,7 @@ function App() {
   const [loading, setLoading] = useState('Carregando...');
   const [shiny, setShiny] = useState(false);
   const [allType, setAllType] = useState();
-  const [species, setSpecies] = useState();
+  const [imgSide, setImgSide] = useState(true);
 
   const getPoke = async () => {
     try {
@@ -40,6 +40,9 @@ function App() {
     <form
       style={{
         fontFamily: 'sans-serif',
+        width: '100vw',
+        height: '100vh',
+        flexWrap: 'wrap',
       }}
       onSubmit={(e) => e.preventDefault()}
     >
@@ -147,17 +150,67 @@ function App() {
                   Proximo
                 </button>
               </div>
-              <section style={{ display: 'flex' }}>
-                <div>
+              <section
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  width: '80vw',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-around',
+                  }}
+                >
                   <img
-                    style={{ width: '30rem', height: '30rem', margin: 'auto' }}
+                    style={{
+                      width: '30rem',
+                      height: '30rem',
+                      margin: 'auto',
+                      cursor: 'pointer',
+                    }}
                     src={
-                      shiny
-                        ? pokeInfo.sprites.front_shiny
-                        : pokeInfo.sprites.front_default
+                      imgSide
+                        ? shiny
+                          ? pokeInfo.sprites.front_shiny
+                          : pokeInfo.sprites.front_default
+                        : shiny
+                        ? pokeInfo.sprites.back_shiny
+                        : pokeInfo.sprites.back_default
                     }
+                    onClick={() => setImgSide(!imgSide)}
                     alt=""
                   />
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <button
+                      style={{
+                        fontSize: '1rem',
+                        borderRadius: '5px',
+                        padding: '1rem',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Anterior
+                    </button>
+                    <button
+                      style={{
+                        fontSize: '1rem',
+                        borderRadius: '5px',
+                        padding: '1rem',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Próximo
+                    </button>
+                  </div>
                   <h1 style={{ fontSize: '2rem', textAlign: 'center' }}>
                     Shiny
                     <input
