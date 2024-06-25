@@ -9,6 +9,8 @@ function App() {
   const [shiny, setShiny] = useState(false);
   const [allType, setAllType] = useState();
   const [imgSide, setImgSide] = useState(true);
+  const [imgCarro, setImgCarro] = useState(0);
+  const [imgPoke, setImgPoke] = useState();
 
   const getPoke = async () => {
     try {
@@ -28,11 +30,135 @@ function App() {
 
   useEffect(() => {
     getPoke();
-  }, [poke]);
+    imgCarrousseu();
+  }, [poke, imgCarro, shiny, imgSide]);
 
   const handleClick = () => {
     if (pokeIn.trim() != '') {
       setPoke(pokeIn.toLowerCase());
+    }
+  };
+
+  const imgCarrousseu = async () => {
+    if (shiny) {
+      if (imgSide) {
+        switch (imgCarro) {
+          case 0:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.front_shiny),
+              );
+            break;
+          case 1:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.other.showdown.front_shiny),
+              );
+            break;
+          case 2:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.other.home.front_shiny),
+              );
+            break;
+
+          default:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.front_shiny),
+              );
+            setImgCarro(0);
+        }
+      } else {
+        switch (imgCarro) {
+          case 0:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) => setImgPoke(response.data.sprites.back_shiny));
+            break;
+          case 1:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.other.showdown.back_shiny),
+              );
+            break;
+          default:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) => setImgPoke(response.data.sprites.back_shiny));
+            setImgCarro(0);
+        }
+      }
+    } else {
+      if (imgSide) {
+        switch (imgCarro) {
+          case 0:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.front_default),
+              );
+            break;
+          case 1:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.other.showdown.front_default),
+              );
+            break;
+          case 2:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.other.home.front_default),
+              );
+            break;
+          case 3:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(
+                  response.data.sprites.other.dream_world.front_default,
+                ),
+              );
+            break;
+
+          default:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.front_shiny),
+              );
+            setImgCarro(0);
+        }
+      } else {
+        switch (imgCarro) {
+          case 0:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.back_default),
+              );
+            break;
+          case 1:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) =>
+                setImgPoke(response.data.sprites.other.showdown.back_default),
+              );
+            break;
+          default:
+            await axios
+              .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
+              .then((response) => setImgPoke(response.data.sprites.back_shiny));
+            setImgCarro(0);
+        }
+      }
     }
   };
 
@@ -171,15 +297,7 @@ function App() {
                       margin: 'auto',
                       cursor: 'pointer',
                     }}
-                    src={
-                      imgSide
-                        ? shiny
-                          ? pokeInfo.sprites.front_shiny
-                          : pokeInfo.sprites.front_default
-                        : shiny
-                        ? pokeInfo.sprites.back_shiny
-                        : pokeInfo.sprites.back_default
-                    }
+                    src={imgPoke}
                     onClick={() => setImgSide(!imgSide)}
                     alt=""
                   />
@@ -196,16 +314,10 @@ function App() {
                         borderRadius: '5px',
                         padding: '1rem',
                         cursor: 'pointer',
+                        margin: 'auto',
                       }}
-                    >
-                      Anterior
-                    </button>
-                    <button
-                      style={{
-                        fontSize: '1rem',
-                        borderRadius: '5px',
-                        padding: '1rem',
-                        cursor: 'pointer',
+                      onClick={() => {
+                        setImgCarro(imgCarro + 1);
                       }}
                     >
                       Próximo
