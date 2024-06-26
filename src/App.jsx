@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 function App() {
+  //Declaração de variaveis
   const [poke, setPoke] = useState('pikachu');
   const [pokeInfo, setPokeInfo] = useState(poke);
   const [pokeIn, setPokeIn] = useState('');
@@ -11,7 +12,10 @@ function App() {
   const [imgSide, setImgSide] = useState(true);
   const [imgCarro, setImgCarro] = useState(0);
   const [imgPoke, setImgPoke] = useState();
+  const [backColor, setBackColor] = useState('yellow');
+  const [type, setType] = useState();
 
+  // Aqui está as requisições do axios
   const getPoke = async () => {
     try {
       await axios
@@ -22,26 +26,87 @@ function App() {
         .get(pokeInfo.types[0].type.url)
         .then((response) => setAllType(response.data));
 
+      setType(pokeInfo.types);
+      switch (type[0].type.name) {
+        case 'fire':
+          setBackColor(['#FD7D24', '#FD7D24']);
+          break;
+
+        case 'water':
+          setBackColor(['#4592C4', '#4592C4']);
+          break;
+        case 'grass':
+          setBackColor(['#9BCC50', '#9BCC50']);
+          break;
+        case 'bug':
+          setBackColor(['#729F3F', '#729F3F']);
+          break;
+        case 'poison':
+          setBackColor(['#B97FC8', '#B97FC8']);
+          break;
+        case 'normal':
+          setBackColor(['#A4ACAF', '#A4ACAF']);
+          break;
+        case 'flying':
+          setBackColor(['#3DC6EE', '#BDB9B8']);
+          break;
+        case 'electric':
+          setBackColor(['#EED535', '#EED535']);
+          break;
+        case 'ground':
+          setBackColor(['#F7DE3F', '#AB9842']);
+          break;
+        case 'fairy':
+          setBackColor(['#FDB9E9', '#FDB9E9']);
+          break;
+        case 'fighting':
+          setBackColor(['#D56723', '#D56723']);
+          break;
+        case 'psychic':
+          setBackColor(['#F766B9', '#F766B9']);
+          break;
+        case 'rock':
+          setBackColor(['#A38C21', '#A38C21']);
+          break;
+        case 'dragon':
+          setBackColor(['#53A4CF', '#F16E57']);
+          break;
+        case 'dark':
+          setBackColor(['#707070', '#707070']);
+          break;
+        case 'steel':
+          setBackColor(['#9EB7B8', '#9EB7B8']);
+          break;
+        case 'ghost':
+          setBackColor(['#7B62A3', '#7B62A3']);
+          break;
+      }
+
       setLoading(false);
     } catch {
       setLoading('Escreva um PokéNome ou PokéNúmero válido 😁');
     }
   };
 
+  // Primeira chamada da API que observa algumas variaveis
   useEffect(() => {
     getPoke();
-    imgCarrousseu();
-  }, [poke, imgCarro, shiny, imgSide]);
 
+    imgCarrousseu();
+  }, [poke, imgCarro, shiny, imgSide, backColor, type]);
+
+  // Caixa de pesquisa de pokemons
   const handleClick = () => {
     if (pokeIn.trim() != '') {
       setPoke(pokeIn.toLowerCase());
     }
   };
 
+  // Carreousel de imagens dos pokemons
   const imgCarrousseu = async () => {
     if (shiny) {
       if (imgSide) {
+        // Esse é o pokemon shiny de frente
         switch (imgCarro) {
           case 0:
             await axios
@@ -54,14 +119,18 @@ function App() {
             await axios
               .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
               .then((response) =>
-                setImgPoke(response.data.sprites.other.showdown.front_shiny),
+                response.data.sprites.other.showdown.front_shiny
+                  ? setImgPoke(response.data.sprites.other.showdown.front_shiny)
+                  : setImgCarro(imgCarro + 1),
               );
             break;
           case 2:
             await axios
               .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
               .then((response) =>
-                setImgPoke(response.data.sprites.other.home.front_shiny),
+                response.data.sprites.other.home.front_shiny
+                  ? setImgPoke(response.data.sprites.other.home.front_shiny)
+                  : setImgCarro(imgCarro + 1),
               );
             break;
 
@@ -74,6 +143,7 @@ function App() {
             setImgCarro(0);
         }
       } else {
+        // pokemon shiny de costas
         switch (imgCarro) {
           case 0:
             await axios
@@ -84,7 +154,9 @@ function App() {
             await axios
               .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
               .then((response) =>
-                setImgPoke(response.data.sprites.other.showdown.back_shiny),
+                response.data.sprites.other.showdown.back_shiny
+                  ? setImgPoke(response.data.sprites.other.showdown.back_shiny)
+                  : setImgCarro(imgCarro + 1),
               );
             break;
           default:
@@ -96,6 +168,7 @@ function App() {
       }
     } else {
       if (imgSide) {
+        // pokemon padrão de frente
         switch (imgCarro) {
           case 0:
             await axios
@@ -108,8 +181,13 @@ function App() {
             await axios
               .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
               .then((response) =>
-                setImgPoke(response.data.sprites.other.showdown.front_default),
+                response.data.sprites.other.showdown.front_default
+                  ? setImgPoke(
+                      response.data.sprites.other.showdown.front_default,
+                    )
+                  : setImgCarro(imgCarro + 1),
               );
+
             break;
           case 2:
             await axios
@@ -122,9 +200,11 @@ function App() {
             await axios
               .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
               .then((response) =>
-                setImgPoke(
-                  response.data.sprites.other.dream_world.front_default,
-                ),
+                response.data.sprites.other.dream_world.front_default
+                  ? setImgPoke(
+                      response.data.sprites.other.dream_world.front_default,
+                    )
+                  : setImgCarro(imgCarro + 1),
               );
             break;
 
@@ -132,11 +212,12 @@ function App() {
             await axios
               .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
               .then((response) =>
-                setImgPoke(response.data.sprites.front_shiny),
+                setImgPoke(response.data.sprites.front_default),
               );
             setImgCarro(0);
         }
       } else {
+        // pokemon padrão de costas
         switch (imgCarro) {
           case 0:
             await axios
@@ -149,7 +230,11 @@ function App() {
             await axios
               .get(`https://pokeapi.co/api/v2/pokemon/${poke}`)
               .then((response) =>
-                setImgPoke(response.data.sprites.other.showdown.back_default),
+                response.data.sprites.other.showdown.back_default
+                  ? setImgPoke(
+                      response.data.sprites.other.showdown.back_default,
+                    )
+                  : setImgCarro(imgCarro + 1),
               );
             break;
           default:
@@ -161,6 +246,7 @@ function App() {
       }
     }
   };
+  // Aqui termina o carrousel
 
   return (
     <form
@@ -292,26 +378,27 @@ function App() {
                 >
                   <img
                     style={{
-                      width: '30rem',
-                      height: '30rem',
+                      background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                      borderRadius: '5px',
+                      width: '20rem',
+                      height: '20rem',
                       margin: 'auto',
                       cursor: 'pointer',
                     }}
-                    src={imgPoke}
+                    src={imgPoke ? imgPoke : './src/assets/notFound.jpg'}
                     onClick={() => setImgSide(!imgSide)}
                     alt=""
                   />
                   <div
                     style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
                       alignItems: 'center',
                     }}
                   >
                     <button
                       style={{
-                        fontSize: '1rem',
-                        borderRadius: '5px',
+                        fontSize: '2rem',
+                        borderRadius: '50%',
                         padding: '1rem',
                         cursor: 'pointer',
                         margin: 'auto',
@@ -320,7 +407,7 @@ function App() {
                         setImgCarro(imgCarro + 1);
                       }}
                     >
-                      Próximo
+                      ➤
                     </button>
                   </div>
                   <h1 style={{ fontSize: '2rem', textAlign: 'center' }}>
@@ -370,7 +457,7 @@ function App() {
                     {pokeInfo.abilities.map((props) => (
                       <li
                         style={{ textTransform: 'uppercase' }}
-                        key={props.ability.name}
+                        key={crypto.randomUUID()}
                       >
                         {props.ability.name}
                       </li>
@@ -386,7 +473,18 @@ function App() {
                   >
                     <h1>{pokeInfo.forms[0].name} é do tipo:</h1>
                     {pokeInfo.types.map((props) => (
-                      <h3 key={props.type.name}>{props.type.name}</h3>
+                      <h3
+                        style={{
+                          margin: '5px auto',
+                          background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                          color: 'white',
+                          width: '10rem',
+                          borderRadius: '5px',
+                        }}
+                        key={props.type.name}
+                      >
+                        {props.type.name}
+                      </h3>
                     ))}
                   </div>
                   <div
@@ -398,7 +496,18 @@ function App() {
                   >
                     <h1>{pokeInfo.forms[0].name} é forte contra:</h1>
                     {allType.damage_relations.double_damage_to.map((props) => (
-                      <li key={props.name}>{props.name}</li>
+                      <h3
+                        style={{
+                          margin: '5px auto',
+                          background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                          color: 'white',
+                          width: '10rem',
+                          borderRadius: '5px',
+                        }}
+                        key={props.name}
+                      >
+                        {props.name}
+                      </h3>
                     ))}
                   </div>
                   <div
@@ -412,7 +521,18 @@ function App() {
                     <h1>{pokeInfo.forms[0].name} é fraco contra:</h1>
                     {allType.damage_relations.double_damage_from.map(
                       (props) => (
-                        <li key={props.name}>{props.name}</li>
+                        <h3
+                          style={{
+                            margin: '5px auto',
+                            background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                            color: 'white',
+                            width: '10rem',
+                            borderRadius: '5px',
+                          }}
+                          key={props.name}
+                        >
+                          {props.name}
+                        </h3>
                       ),
                     )}
                   </div>
