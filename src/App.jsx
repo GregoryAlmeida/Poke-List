@@ -14,6 +14,7 @@ function App() {
   const [imgPoke, setImgPoke] = useState();
   const [backColor, setBackColor] = useState('yellow');
   const [type, setType] = useState();
+  const [area, setArea] = useState();
 
   // Aqui está as requisições do axios
   const getPoke = async () => {
@@ -25,6 +26,10 @@ function App() {
       await axios
         .get(pokeInfo.types[0].type.url)
         .then((response) => setAllType(response.data));
+
+      await axios
+        .get(pokeInfo.location_area_encounters)
+        .then((response) => setArea(response.data));
 
       setType(pokeInfo.types);
       switch (type[0].type.name) {
@@ -449,17 +454,24 @@ function App() {
                   }}
                 >
                   <p>
-                    Altura: {pokeInfo.height * 10}cm
+                    📏 <strong>Altura:</strong> {pokeInfo.height * 10}cm
                     <br />
-                    Peso: {pokeInfo.weight / 10} kg
+                    ⚖️ <strong>Peso:</strong> {pokeInfo.weight / 10} kg
                     <br />
-                    Habilidades:
+                    🧪 <strong>Experiência base:</strong>{' '}
+                    {pokeInfo.base_experience}xp
+                    <br />
+                    🧶 <strong>Habilidades:</strong>
                     {pokeInfo.abilities.map((props) => (
                       <li
-                        style={{ textTransform: 'uppercase' }}
+                        style={{
+                          textTransform: 'uppercase',
+                          listStyle: 'none',
+                          marginLeft: '1.5rem',
+                        }}
                         key={crypto.randomUUID()}
                       >
-                        {props.ability.name}
+                        💥 {props.ability.name}
                       </li>
                     ))}
                   </p>
@@ -495,32 +507,9 @@ function App() {
                     }}
                   >
                     <h1>{pokeInfo.forms[0].name} é forte contra:</h1>
-                    {allType.damage_relations.double_damage_to.map((props) => (
-                      <h3
-                        style={{
-                          margin: '5px auto',
-                          background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
-                          color: 'white',
-                          width: '10rem',
-                          borderRadius: '5px',
-                        }}
-                        key={props.name}
-                      >
-                        {props.name}
-                      </h3>
-                    ))}
-                  </div>
-                  <div
-                    style={{
-                      textTransform: 'uppercase',
-                      textAlign: 'center',
-                      marginTop: '2rem',
-                      paddingBottom: '5rem',
-                    }}
-                  >
-                    <h1>{pokeInfo.forms[0].name} é fraco contra:</h1>
-                    {allType.damage_relations.double_damage_from.map(
-                      (props) => (
+
+                    {allType.damage_relations.double_damage_to[0] ? (
+                      allType.damage_relations.double_damage_to.map((props) => (
                         <h3
                           style={{
                             margin: '5px auto',
@@ -533,9 +522,104 @@ function App() {
                         >
                           {props.name}
                         </h3>
-                      ),
+                      ))
+                    ) : (
+                      <h3
+                        style={{
+                          margin: '5px auto',
+                          background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                          color: 'white',
+                          width: '10rem',
+                          borderRadius: '5px',
+                        }}
+                      >
+                        <strong>Não possui</strong>
+                      </h3>
                     )}
                   </div>
+                  <div
+                    style={{
+                      textTransform: 'uppercase',
+                      textAlign: 'center',
+                      marginTop: '2rem',
+                      paddingBottom: '5rem',
+                    }}
+                  >
+                    <h1>{pokeInfo.forms[0].name} é fraco contra:</h1>
+                    {allType.damage_relations.double_damage_from[0] ? (
+                      allType.damage_relations.double_damage_from.map(
+                        (props) => (
+                          <h3
+                            style={{
+                              margin: '5px auto',
+                              background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                              color: 'white',
+                              width: '10rem',
+                              borderRadius: '5px',
+                            }}
+                            key={props.name}
+                          >
+                            {props.name}
+                          </h3>
+                        ),
+                      )
+                    ) : (
+                      <h3
+                        style={{
+                          margin: '5px auto',
+                          background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                          color: 'white',
+                          width: '10rem',
+                          borderRadius: '5px',
+                        }}
+                      >
+                        <strong>Não possui</strong>
+                      </h3>
+                    )}
+                  </div>
+                </div>
+              </section>
+              <section>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textTransform: 'uppercase',
+                    flexWrap: 'wrap',
+                    padding: '1rem',
+                  }}
+                >
+                  <h1>
+                    Locais onde {pokeInfo.forms[0].name} pode ser encontrado:
+                  </h1>
+                  <br />
+                  {area[0] ? (
+                    area.map((props) => (
+                      <p
+                        style={{ padding: '0.5rem' }}
+                        key={props.location_area.name}
+                      >
+                        <strong>{props.version_details[0].version.name}</strong>{' '}
+                        |{' '}
+                        {props.location_area.name
+                          .replace('-', ' ')
+                          .replace('-', ' ')
+                          .replace('-', ' ')}{' '}
+                        |{' '}
+                        <strong>
+                          Chance Máxima:{' '}
+                          {props.version_details[0].max_chance + '%'}
+                        </strong>
+                      </p>
+                    ))
+                  ) : (
+                    <p style={{ padding: '1rem' }}>
+                      <strong>
+                        Não há locais onde possa ser encontrado 😢
+                      </strong>
+                    </p>
+                  )}
                 </div>
               </section>
             </>
