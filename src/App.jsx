@@ -350,8 +350,17 @@ function App() {
                 >
                   Anterior
                 </button>
-
-                <h1 style={{ textAlign: 'center', textTransform: 'uppercase' }}>
+                <h1
+                  style={{
+                    textAlign: 'center',
+                    textTransform: 'uppercase',
+                    padding: '5px',
+                    background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                    color: 'white',
+                    width: '15rem',
+                    borderRadius: '5px',
+                  }}
+                >
                   {pokeInfo.forms[0].name}
                   <br />({pokeInfo.id})
                 </h1>
@@ -584,23 +593,44 @@ function App() {
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
+                    margin: 'auto',
                     textTransform: 'uppercase',
                     flexWrap: 'wrap',
                     padding: '1rem',
                   }}
                 >
-                  <h1>
-                    Locais onde {pokeInfo.forms[0].name} pode ser encontrado:
+                  <h1 style={{ textAlign: 'center' }}>
+                    Locais onde{' '}
+                    <strong
+                      style={{
+                        padding: '5px',
+                        background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                        color: 'white',
+                        width: '10rem',
+                        borderRadius: '5px',
+                      }}
+                    >
+                      {pokeInfo.forms[0].name}
+                    </strong>{' '}
+                    pode ser encontrado:
                   </h1>
                   <br />
                   {area[0] ? (
                     area.map((props) => (
                       <p
-                        style={{ padding: '0.5rem' }}
+                        style={{ padding: '0.5rem', border: '1px solid black' }}
                         key={props.location_area.name}
                       >
-                        <strong>{props.version_details[0].version.name}</strong>{' '}
+                        <strong
+                          style={{
+                            backgroundColor:
+                              props.version_details[0].version.name,
+                            padding: '2px',
+                            borderRadius: '5px',
+                          }}
+                        >
+                          {props.version_details[0].version.name}
+                        </strong>{' '}
                         |{' '}
                         {props.location_area.name
                           .replace('-', ' ')
@@ -620,6 +650,64 @@ function App() {
                       </strong>
                     </p>
                   )}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    margin: 'auto',
+                    textTransform: 'uppercase',
+                    flexWrap: 'wrap',
+                    padding: '1rem',
+                  }}
+                >
+                  <h1 style={{ padding: '1rem', textAlign: 'center' }}>
+                    Habilidades que{' '}
+                    <strong
+                      style={{
+                        padding: '5px',
+                        background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                        color: 'white',
+                        borderRadius: '5px',
+                      }}
+                    >
+                      {pokeInfo.forms[0].name}
+                    </strong>
+                    pode aprender:
+                  </h1>
+
+                  {pokeInfo.moves.map((props) => (
+                    <p
+                      style={{
+                        padding: '0.5rem',
+                        border: '1px solid black',
+                      }}
+                      key={props.move.name}
+                    >
+                      <strong
+                        style={{
+                          borderRadius: '5px',
+                          padding: '2px',
+                          background: `linear-gradient(to right, ${props.version_group_details[0].version_group.name.split(
+                            '-'[0],
+                          )} , ${
+                            props.version_group_details[0].version_group.name.split(
+                              '-',
+                            )[1]
+                          } )`,
+                        }}
+                      >
+                        {props.version_group_details[0].version_group.name.replace(
+                          '-',
+                          ' ',
+                        )}
+                      </strong>{' '}
+                      | {props.move.name} | <strong>Aprende Level: </strong>
+                      {props.version_group_details[0].level_learned_at} |{' '}
+                      <strong>Metodo: </strong>{' '}
+                      {props.version_group_details[0].move_learn_method.name}
+                    </p>
+                  ))}
                 </div>
               </section>
             </>
