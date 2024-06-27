@@ -85,6 +85,9 @@ function App() {
         case 'ghost':
           setBackColor(['#7B62A3', '#7B62A3']);
           break;
+        case 'ice':
+          setBackColor(['#51C4E7', '#51C4E7']);
+          break;
       }
 
       setLoading(false);
