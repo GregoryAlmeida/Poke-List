@@ -89,7 +89,20 @@ function App() {
 
       setLoading(false);
     } catch {
-      setLoading('Escreva um PokéNome ou PokéNúmero válido 😁');
+      await axios
+        .get(
+          `https://pokeapi.co/api/v2/pokemon/${Math.floor(
+            Math.random() * 1025,
+          )}`,
+        )
+        .then((response) => {
+          setLoading({
+            name: 'Caso não tenha um Pokémon em mente, teste os pequeninos abaixo 😁👇',
+            pokeName: response.data.name,
+            pokeNumber: response.data.id,
+            url: response.data.sprites.front_default,
+          });
+        });
     }
   };
 
@@ -316,21 +329,56 @@ function App() {
             style={{ fontSize: '1.5rem', width: '20rem' }}
             onClick={() => setPoke(Math.floor(Math.random() * 1025))}
           >
-            Poké Aleatório
+            Surpreenda-me ✨
           </button>
         </div>
         <div>
           {loading ? (
-            <h1
+            <div
               style={{
                 width: '50rem',
                 margin: 'auto',
-                fontSize: '2rem',
-                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '2rem',
               }}
             >
-              {loading}
-            </h1>
+              <div>
+                <h1>{loading.name}</h1>
+              </div>
+              <div
+                style={{
+                  flexDirection: 'row',
+                  padding: '1rem',
+                  textTransform: 'uppercase',
+                  height: '30rem',
+                  textAlign: 'center',
+                }}
+              >
+                <div style={{ flexDirection: 'column' }}>
+                  <img
+                    style={{
+                      margin: 'auto',
+                      alignItems: 'center',
+                      height: '20rem',
+                      width: '20rem',
+                      cursor: 'pointer',
+                    }}
+                    src={loading.url}
+                    alt=""
+                    onClick={() => {
+                      setPoke(loading.pokeNumber);
+                      getPoke();
+                    }}
+                  />
+                  <p>
+                    <strong>
+                      {loading.pokeName}({loading.pokeNumber})
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
           ) : (
             <>
               <div
