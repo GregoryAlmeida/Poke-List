@@ -97,7 +97,7 @@ function App() {
         )
         .then((response) => {
           setLoading({
-            name: 'Caso não tenha um Pokémon em mente, teste os pequeninos abaixo 😁👇',
+            name: 'Caso não tenha um Pokémon em mente, teste o pequenino abaixo 😁👇',
             pokeName: response.data.name,
             pokeNumber: response.data.id,
             url: response.data.sprites.front_default,
@@ -438,19 +438,30 @@ function App() {
                     justifyContent: 'space-around',
                   }}
                 >
-                  <img
-                    style={{
-                      background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
-                      borderRadius: '5px',
-                      width: '20rem',
-                      height: '20rem',
-                      margin: 'auto',
-                      cursor: 'pointer',
-                    }}
-                    src={imgPoke ? imgPoke : './src/assets/notFound.jpg'}
-                    onClick={() => setImgSide(!imgSide)}
-                    alt=""
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <img
+                      style={{
+                        background: `linear-gradient(${backColor[0]} 50%, ${backColor[1]} 50%)`,
+                        borderRadius: '5px',
+                        width: '20rem',
+                        height: '20rem',
+                        margin: 'auto',
+                        cursor: 'pointer',
+                      }}
+                      src={imgPoke ? imgPoke : './src/assets/notFound.jpg'}
+                      onClick={() => setImgSide(!imgSide)}
+                      alt=""
+                    />
+                    <p
+                      style={{
+                        position: 'absolute',
+                        right: '2rem',
+                        bottom: '0.5rem',
+                      }}
+                    >
+                      🔃
+                    </p>
+                  </div>
                   <div
                     style={{
                       display: 'flex',
@@ -692,7 +703,7 @@ function App() {
                       </p>
                     ))
                   ) : (
-                    <p style={{ padding: '1rem' }}>
+                    <p style={{ padding: '1rem', textAlign: 'center' }}>
                       <strong>
                         Não há locais onde possa ser encontrado 😢
                       </strong>
